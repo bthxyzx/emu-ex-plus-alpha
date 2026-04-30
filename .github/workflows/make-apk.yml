@@ -1,0 +1,47 @@
+name: GBA Emu APK
+
+on: workflow_dispatch: push: branches: ["main"]
+
+jobs: build-gba: name: Build GBA.emu APK runs-on: ubuntu-latest
+
+steps:
+  - name: Checkout repo
+    uses: actions/checkout@v4
+
+  - name: Set short commit hash
+    run: echo "COMMIT_PREFIX=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_ENV
+
+  - name: Install dependencies
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y --no-install-recommends \
+        autoconf automake autopoint bash gcc-arm-linux-gnueabi \
+        file gawk gettext git libtool libtool-bin make nasm pkg-config unzip wget
+
+  - name: Install CMake
+    uses: lukka/get-cmake@latest
+
+  - name: Set up JDK 21
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: 21
+
+  - name: Create output folder
+    run: mkdir -p EX-Emulators
+
+  - name: Build GBA.emu
+    working-directory: GBA.emu
+    run: |
+      make -f android.mk android-apk CONFIG=Release V=1 -j$(nproc)
+
+  - name: Copy APK
+    run: |
+      cp GBA.emu/build/android/build/outputs/apk/release/GbaEmu-release.apk \
+      EX-Emulators/GbaEmu-${COMMIT_PREFIX}.apk
+
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: GBA-Emu-APK
+      path: EX-Emulators/
