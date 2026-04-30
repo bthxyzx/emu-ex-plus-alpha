@@ -163,13 +163,14 @@ bool InputManager::handleAppActionKeyInput(EmuApp& app, InputAction action, cons
 		}
 		break;
 		case exitApp:
-		{
-			if(!isPushed)
-				break;
-			viewController.pushAndShowModal(std::make_unique<YesNoAlertView>(app.attachParams(), "Really Exit?",
-				YesNoAlertView::Delegates{.onYes = [&app]{ app.appContext().exit(); }}), srcEvent, false);
-		}
-		break;
+        {
+            if(!isPushed)
+             break;
+
+            app.showLastViewFromSystem(app.attachParams(), srcEvent);
+            return true;
+         }
+        break;
 		case slowMotion:
 		{
 			viewController.inputView.setAltSpeedMode(AltSpeedMode::slow, isPushed);
