@@ -185,7 +185,7 @@ void EmuApp::showLastViewFromSystem(ViewAttachParams attach, const Input::Event 
 
 void EmuApp::showExitAlert(ViewAttachParams attach, const Input::Event &e)
 {
-    showLastViewFromSystem(attach, e);
+    showEmulation();
 }
 
 static const char *parseCommandArgs(CommandArgs arg)
