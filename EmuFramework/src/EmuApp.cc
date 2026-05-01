@@ -183,7 +183,7 @@ void EmuApp::showLastViewFromSystem(ViewAttachParams attach, const Input::Event 
 	}
 }
 
-void EmuApp::showExitAlert(ViewAttachParams attach, const Input::Event &e)
+void EmuApp::showExitAlert(ViewAttachParams, const Input::Event &)
 {
     showEmulation();
 }
